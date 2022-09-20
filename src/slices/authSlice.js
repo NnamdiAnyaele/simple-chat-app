@@ -18,7 +18,7 @@ const authSlice = createSlice({
 			state.isAuthenticated = false;
 			state.user = {};
 			localStorage.clear();
-			window.location = "/login";
+			window.location = "/";
 		},
 		loginSuccess(state, action) {
 			state.isAuthenticated = !isEmpty(action.payload);
