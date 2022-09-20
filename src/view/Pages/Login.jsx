@@ -82,6 +82,7 @@ export default function LoginForm() {
 				noValidate
 				autoComplete="off"
 				onSubmit={handleSubmit}
+				data-testid="login-form"
 			>
 				<p className="header">Welcome!</p>
 				<FormControl fullWidth variant="outlined">
@@ -99,8 +100,11 @@ export default function LoginForm() {
 							</InputAdornment>
 						}
 						error={Boolean(error.name)}
+						inputProps={{
+							"data-testid": "username-input",
+						}}
 					/>
-					<FormHelperText id="component-error-text">
+					<FormHelperText id="component-error-text" data-testid="helper-text">
 						{error.name}
 					</FormHelperText>
 				</FormControl>
@@ -109,6 +113,8 @@ export default function LoginForm() {
 					type="submit"
 					fullWidth
 					sx={{ p: "0.6rem" }}
+					disabled={Boolean(user.name.length < 3) || isProcessing}
+					data-testid="login-button"
 				>
 					{isProcessing ? (
 						<CircularProgress size={18} style={{ color: "#fff" }} />
