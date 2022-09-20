@@ -38,6 +38,7 @@ describe("Login", () => {
 	});
 
 	test("renders success state", () => {
+        const testValue = "test";
 		render(
 			<MemoryRouter initialEntries={["/"]}>
 				<Login />
@@ -47,11 +48,11 @@ describe("Login", () => {
 		const usernameField = screen.getByTestId("username-input");
 		const submitButton = screen.getByTestId("login-button");
 
-		fireEvent.change(usernameField, { target: { value: "test" } });
+		fireEvent.change(usernameField, { target: { value: testValue } });
 		fireEvent.click(submitButton);
 
 		expect(usernameField).toBeInTheDocument();
-		expect(usernameField).toHaveValue("test");
+		expect(usernameField).toHaveValue(testValue);
 		expect(submitButton).toBeInTheDocument();
 		expect(submitButton).not.toHaveClass("Mui-disabled");
 	});

@@ -107,10 +107,14 @@ const ChatBox = () => {
 
 	const messagesEndRef = useRef(null);
 	const scrollToBottom = () => {
-		messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+		messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
 	};
 
-	useEffect(scrollToBottom, [messages]);
+	useEffect(() => {
+		if (messages?.current) {
+			scrollToBottom();
+		}
+	}, [messages]);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -143,7 +147,7 @@ const ChatBox = () => {
 			<Box sx={mainContainerStyle}>
 				{messages?.length < 1 && (
 					<Box sx={noMessagesStyle}>
-						<Typography variant="body1" color="primary" sx={noMessageTextStyle}>
+						<Typography variant="body1" color="primary" sx={noMessageTextStyle} data-testid="no-message-text">
 							no message history
 						</Typography>
 					</Box>
@@ -176,6 +180,7 @@ const ChatBox = () => {
 										padding: "0.5rem",
 										...(user.userId === item.userId && myMessageBodyStyles),
 									}}
+									data-testid="message-text"
 								>
 									{item.message}
 								</Box>
@@ -213,6 +218,9 @@ const ChatBox = () => {
 							onChange={(e) => setTypedMessage(e.target.value)}
 							fullWidth
 							size="small"
+							inputProps={{
+								"data-testid": "chat-input",
+							}}
 						/>
 					</Box>
 
@@ -220,7 +228,9 @@ const ChatBox = () => {
 						variant="outlined"
 						color="primary"
 						sx={buttonStyle}
+						disabled={!typedMessage}
 						onClick={handleSubmit}
+						data-testid="send-button"
 					>
 						send
 					</Button>

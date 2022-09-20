@@ -113,7 +113,7 @@ export default function LoginForm() {
 					type="submit"
 					fullWidth
 					sx={{ p: "0.6rem" }}
-					disabled={Boolean(user.name.length < 3) || isProcessing}
+					disabled={user.name.length < 3 || isProcessing}
 					data-testid="login-button"
 				>
 					{isProcessing ? (
