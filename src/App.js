@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { store } from "./store/index";
+import useId from "./hooks/useId";
+import auth from "./utils/auth";
+import { loginSuccess } from "./slices/authSlice";
+import { recoverMesages } from "./slices/messageSlice";
+import { TAB_ID_KEY } from "./utils/constants";
+import BaseRoute from "./view/routes/BaseRoutes";
+import AppProviders from "./providers/AppProviders";
+import "react-toastify/dist/ReactToastify.css";
+
+if (auth.authenticate()) {
+	const name = sessionStorage.getItem("name");
+	const userId = sessionStorage.getItem(TAB_ID_KEY);
+	const messages = JSON.parse(localStorage.getItem("messages")) || [];
+	store.dispatch(
+		loginSuccess({
+			name,
+			userId,
+		})
+	);
+	store.dispatch(recoverMesages(messages));
+}
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	useId();
+
+	return (
+		<AppProviders>
+			<BaseRoute />
+		</AppProviders>
+	);
 }
 
 export default App;
