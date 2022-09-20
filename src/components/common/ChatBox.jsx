@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import { setMessage, updateMessage } from "../../slices/messageSlice";
 import { toast } from "react-toastify";
@@ -60,14 +61,13 @@ const mainMessageContainerStyle = {
 };
 
 const myMessageStyles = {
-	marginLeft: "auto",
 	display: "flex",
 	flexDirection: "column",
 	alignItems: "flex-end",
 };
 
 const myMessageBodyStyles = {
-	backgroundColor: "#002564",
+	backgroundColor: "#7459F5",
 	border: "1px solid #0048aa",
 	borderRadius: "14px 14px 0 14px",
 	color: "#fff",
@@ -91,6 +91,11 @@ const buttonStyle = {
 	"&:hover": {
 		backgroundColor: "#fff",
 	},
+};
+
+const avatarStyle = {
+	fontSize: "8rem",
+	color: "#ccc",
 };
 
 const ChatBox = () => {
@@ -127,8 +132,6 @@ const ChatBox = () => {
 		};
 	}, [dispatch]);
 
-	console.log({ messages });
-
 	return (
 		<Box sx={style}>
 			<Box sx={headerStyle}>
@@ -151,26 +154,46 @@ const ChatBox = () => {
 						<Box
 							key={index}
 							sx={{
-								maxWidth: "70%",
-								marginBottom: "1rem",
-								...(user.userId === item.userId && myMessageStyles),
+								display: "flex",
+								alignItems: "flex-end",
+								flexDirection:
+									item.userId === user.userId ? "row-reverse" : "row",
 							}}
 						>
 							<Box
 								sx={{
-									backgroundColor: "#f0f0f0",
-									color: "#000",
-									border: "1px solid #cccccc",
-									borderRadius: "14px 14px 14px 0",
-									padding: "0.5rem",
-									...(user.userId === item.userId && myMessageBodyStyles),
+									maxWidth: "20rem",
+									marginBottom: "1rem",
+									...(user.userId === item.userId && myMessageStyles),
 								}}
 							>
-								{item.message}
+								<Box
+									sx={{
+										backgroundColor: "#f0f0f0",
+										color: "#000",
+										border: "1px solid #cccccc",
+										borderRadius: "14px 14px 14px 0",
+										padding: "0.5rem",
+										...(user.userId === item.userId && myMessageBodyStyles),
+									}}
+								>
+									{item.message}
+								</Box>
+								<Box>
+									<Typography
+										variant="caption"
+										sx={{ textTransform: "capitalize" }}
+									>{`${user.userId === item.userId ? "you" : item.name} at ${
+										item.date
+									}`}</Typography>
+								</Box>
 							</Box>
-							{/* <Box>
-								<Typography variant="caption">{item.created_at}</Typography>
-							</Box> */}
+							<AccountCircleIcon
+								sx={{
+									...avatarStyle,
+									color: user.userId === item.userId ? "#7459F5" : "#ccc",
+								}}
+							/>
 						</Box>
 					))}
 					<div ref={messagesEndRef} />

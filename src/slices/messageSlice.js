@@ -12,7 +12,12 @@ const messageSlice = createSlice({
 			const { message, user } = action.payload;
 			state.messages = [
 				...state.messages,
-				{ message, userId: user.userId, name: user.name },
+				{
+					message,
+					userId: user.userId,
+					name: user.name,
+					date: `${new Date()}`,
+				},
 			];
 			localStorage.setItem("messages", JSON.stringify(state.messages));
 		},
@@ -21,7 +26,7 @@ const messageSlice = createSlice({
 		},
 		updateMessage(state, action) {
 			const currentMessages = localStorage.getItem("messages");
-			const messages = JSON.parse(currentMessages);
+			const messages = JSON.parse(currentMessages) || [];
 			state.messages = messages;
 		},
 	},
