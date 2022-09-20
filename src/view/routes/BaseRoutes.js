@@ -3,14 +3,22 @@ import { useSelector } from "react-redux";
 
 import Login from "../Pages/Login";
 import Dashboard from "../Pages/Dashboard";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const BaseRoute = () => {
-	const { user } = useSelector((state) => state.auth);
+	const { isAuthenticated } = useSelector((state) => state.auth);
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Login />} />
-				<Route path="/dashboard" element={<Dashboard />} />
+				<Route
+					path="dashboard"
+					element={
+						<ProtectedRoutes isAllowed={isAuthenticated}>
+							<Dashboard />
+						</ProtectedRoutes>
+					}
+				/>
 			</Routes>
 		</BrowserRouter>
 	);
