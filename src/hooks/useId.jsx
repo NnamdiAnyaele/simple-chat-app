@@ -8,7 +8,10 @@ const useId = () => {
 	}, []);
 
 	useEffect(() => {
-		if (typeof Storage !== "undefined") {
+		if (
+			typeof Storage !== "undefined" &&
+			sessionStorage.getItem(TAB_ID_KEY) === null
+		) {
 			sessionStorage.setItem(TAB_ID_KEY, id);
 		}
 	}, [id]);

@@ -1,10 +1,16 @@
+import Box from "@mui/material/Box";
+
 import Navbar from "../../components/common/Navbar";
+import ChatBox from "../../components/common/ChatBox";
 
 const Dashboard = () => {
 	return (
-		<div>
+		<Box>
 			<Navbar />
-		</div>
+			<Box>
+				<ChatBox />
+			</Box>
+		</Box>
 	);
 };
 
