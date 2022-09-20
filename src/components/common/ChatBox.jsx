@@ -1,10 +1,63 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import Button from "@mui/material/Button";
+
+import { setMessage, updateMessage } from "../../slices/messageSlice";
+import { toast } from "react-toastify";
+
+const style = {
+	width: "46rem",
+	maxWidth: "46rem",
+};
+
+const headerStyle = {
+	p: "0.5rem",
+	backgroundColor: "primary.main",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+};
+
+const headerTextStyle = {
+	fontWeight: "bold",
+	textTransform: "capitalize",
+	color: "#fff",
+	margin: "0 auto",
+	textAlign: "center",
+};
+
+const mainContainerStyle = {
+	width: "100%",
+	height: "100%",
+	overflow: "auto",
+	display: "flex",
+	flexDirection: "column",
+	border: "1px solid #7459F5",
+};
+
+const noMessagesStyle = {
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "Center",
+	height: "100%",
+	width: "100%",
+};
+
+const noMessageTextStyle = {
+	textTransform: "capitalize",
+	textAlign: "center",
+	fontWeight: "bold",
+};
+
+const mainMessageContainerStyle = {
+	flexGrow: 1,
+	display: "flex",
+	flexDirection: "column",
+	padding: "1rem",
+};
 
 const myMessageStyles = {
 	marginLeft: "auto",
@@ -20,8 +73,30 @@ const myMessageBodyStyles = {
 	color: "#fff",
 };
 
+const chatBoxFooterStyle = {
+	p: "1rem",
+	backgroundColor: "#7459F5",
+	display: "flex",
+};
+
+const formStyle = {
+	backgroundColor: "#fff",
+	mr: "1rem",
+	width: "90%",
+};
+
+const buttonStyle = {
+	textTransform: "capitalize",
+	backgroundColor: "#fff",
+	"&:hover": {
+		backgroundColor: "#fff",
+	},
+};
+
 const ChatBox = () => {
-	const { messages, user } = useSelector((state) => state.message);
+	const { user } = useSelector((state) => state.auth);
+	const { messages } = useSelector((state) => state.message);
+	const dispatch = useDispatch();
 
 	const [typedMessage, setTypedMessage] = useState("");
 
@@ -32,88 +107,53 @@ const ChatBox = () => {
 
 	useEffect(scrollToBottom, [messages]);
 
-	const handleSubmit = (event) => {};
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		if (!typedMessage) {
+			toast.error("Please enter a message");
+			return;
+		}
+		dispatch(setMessage({ message: typedMessage, user }));
+		setTypedMessage("");
+	};
+
+	useEffect(() => {
+		const messagetUpdateInterval = setInterval(() => {
+			dispatch(updateMessage());
+		}, 1000);
+
+		return () => {
+			clearInterval(messagetUpdateInterval);
+		};
+	}, [dispatch]);
+
+	console.log({ messages });
 
 	return (
-		<Box
-			sx={{
-				height: "75vh",
-				maxWidth: "300px",
-				border: "1px solid #7459F5",
-			}}
-		>
-			<Box
-				sx={{
-					p: "0.5rem",
-					backgroundColor: "primary.main",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				<Typography
-					variant="h6"
-					color="primary"
-					sx={{
-						fontWeight: "bold",
-						textTransform: "capitalize",
-						color: "#fff",
-						margin: "0 auto",
-						textAlign: "center",
-					}}
-				>
+		<Box sx={style}>
+			<Box sx={headerStyle}>
+				<Typography variant="h6" color="primary" sx={headerTextStyle}>
 					chat box
 				</Typography>
-				<IconButton sx={{ visibility: "hidden" }}>
-					<ArrowBackIosIcon sx={{ color: "#fff", fontSize: "1rem" }} />
-				</IconButton>
 			</Box>
 
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					width: "100%",
-					padding: "1rem",
-					height: "100%",
-					overflow: "auto",
-				}}
-			>
+			<Box sx={mainContainerStyle}>
 				{messages?.length < 1 && (
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "Center",
-						}}
-					>
-						<Typography
-							variant="body1"
-							color="primary"
-							sx={{
-								textTransform: "capitalize",
-								textAlign: "center",
-								fontWeight: "bold",
-							}}
-						>
+					<Box sx={noMessagesStyle}>
+						<Typography variant="body1" color="primary" sx={noMessageTextStyle}>
 							no message history
 						</Typography>
 					</Box>
 				)}
 
-				<Box
-					sx={{
-						display: "flex",
-						flexDirection: "column",
-					}}
-				>
+				<Box sx={mainMessageContainerStyle}>
 					{messages?.map((item, index) => (
 						<Box
 							key={index}
 							sx={{
 								maxWidth: "70%",
 								marginBottom: "1rem",
-								// ...(userId === item.user.id && myMessageStyles),
+								...(user.userId === item.userId && myMessageStyles),
 							}}
 						>
 							<Box
@@ -123,34 +163,44 @@ const ChatBox = () => {
 									border: "1px solid #cccccc",
 									borderRadius: "14px 14px 14px 0",
 									padding: "0.5rem",
-									// ...(userId === item.user.id && myMessageBodyStyles),
+									...(user.userId === item.userId && myMessageBodyStyles),
 								}}
 							>
-								{item.plain_response}
+								{item.message}
 							</Box>
-							<Box>
+							{/* <Box>
 								<Typography variant="caption">{item.created_at}</Typography>
-							</Box>
+							</Box> */}
 						</Box>
 					))}
 					<div ref={messagesEndRef} />
-					{/* <Box
+				</Box>
+				<Box sx={chatBoxFooterStyle}>
+					<Box
 						component="form"
 						noValidate
 						autoComplete="off"
-						sx={{ width: "100%", mt: "auto" }}
+						sx={formStyle}
 						onSubmit={handleSubmit}
 					>
 						<TextField
-							id="outlined-basic"
-							label="Comment"
-							variant="outlined"
+							label="Start typing..."
+							variant="filled"
 							value={typedMessage}
 							onChange={(e) => setTypedMessage(e.target.value)}
 							fullWidth
-							placeholder="Write a comment..."
+							size="small"
 						/>
-					</Box> */}
+					</Box>
+
+					<Button
+						variant="outlined"
+						color="primary"
+						sx={buttonStyle}
+						onClick={handleSubmit}
+					>
+						send
+					</Button>
 				</Box>
 			</Box>
 		</Box>

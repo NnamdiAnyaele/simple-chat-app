@@ -51,8 +51,6 @@ export default function LoginForm() {
 		name: "",
 	});
 
-	console.log({ error });
-
 	const handleChange = (event) => {
 		setUser({ ...user, [event.target.name]: event.target.value });
 	};

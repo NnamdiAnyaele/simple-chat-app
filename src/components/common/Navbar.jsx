@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,12 +9,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MoreIcon from "@mui/icons-material/MoreVert";
 
 import { logout } from "../../slices/authSlice";
 
 export default function Navbar() {
 	const dispatch = useDispatch();
+	const { user } = useSelector((state) => state.auth);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -33,10 +33,6 @@ export default function Navbar() {
 	const handleMenuClose = () => {
 		setAnchorEl(null);
 		handleMobileMenuClose();
-	};
-
-	const handleMobileMenuOpen = (event) => {
-		setMobileMoreAnchorEl(event.currentTarget);
 	};
 
 	const menuId = "primary-search-account-menu";
@@ -89,7 +85,7 @@ export default function Navbar() {
 						Chat App
 					</Typography>
 					<Box sx={{ flexGrow: 1 }} />
-					<Box sx={{ display: { xs: "none", md: "flex" } }}>
+					<Box>
 						<IconButton
 							size="large"
 							edge="end"
@@ -100,19 +96,13 @@ export default function Navbar() {
 							color="inherit"
 						>
 							<AccountCircle />
+							<Typography
+								variant="body2"
+								sx={{ fontWeight: 500, m: "0 0.5rem" }}
+							>
+								{user?.name}
+							</Typography>
 							<ArrowDropDownIcon />
-						</IconButton>
-					</Box>
-					<Box sx={{ display: { xs: "flex", md: "none" } }}>
-						<IconButton
-							size="large"
-							aria-label="show more"
-							aria-controls={mobileMenuId}
-							aria-haspopup="true"
-							onClick={handleMobileMenuOpen}
-							color="inherit"
-						>
-							<MoreIcon />
 						</IconButton>
 					</Box>
 				</Toolbar>

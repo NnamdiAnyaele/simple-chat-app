@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 if (auth.authenticate()) {
 	const name = sessionStorage.getItem("name");
 	const userId = sessionStorage.getItem(TAB_ID_KEY);
-	const messages = JSON.parse(sessionStorage.getItem("messages")) || [];
+	const messages = JSON.parse(localStorage.getItem("messages")) || [];
 	store.dispatch(
 		loginSuccess({
 			name,
