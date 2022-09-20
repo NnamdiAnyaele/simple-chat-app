@@ -1,6 +1,7 @@
 import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { ToastContainer } from "react-toastify";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import { store } from "./store/index";
 import customTheme from "./config/themeConfig";
@@ -10,7 +11,6 @@ import { loginSuccess } from "./slices/authSlice";
 import { recoverMesages } from "./slices/messageSlice";
 import { TAB_ID_KEY } from "./utils/constants";
 import BaseRoute from "./view/routes/BaseRoutes";
-import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
 if (auth.authenticate()) {
@@ -32,6 +32,7 @@ function App() {
 	return (
 		<Provider store={store}>
 			<ThemeProvider theme={customTheme}>
+				<CssBaseline />
 				<ToastContainer />
 				<BaseRoute />
 			</ThemeProvider>
