@@ -71,7 +71,7 @@ export default function LoginForm() {
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			navigate("/dashboard");
+			window.location = "/dashboard";
 		}
 	}, [isAuthenticated, navigate]);
 

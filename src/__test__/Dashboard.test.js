@@ -85,8 +85,6 @@ describe("ChatBox", () => {
 
 		const messageTexts = screen.getAllByTestId("message-text");
 
-		console.log({ value: messageTexts.map((message) => message.textContent) });
-
 		expect(messageField).toBeInTheDocument();
 		expect(messageField).toHaveValue("");
 		expect(submitButton).toBeInTheDocument();
